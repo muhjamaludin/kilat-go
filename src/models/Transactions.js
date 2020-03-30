@@ -5,12 +5,13 @@ module.exports = {
     let { page, perPage, sort, search } = conditions
     page = page || 1
     perPage = perPage || 5
-    sort = sort || { key: 'id', value: '' }
+    sort = sort || { key: 'price', value: '' }
     search = search || { key: 'price', value: '' }
     const table = 'transactions'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM ${table} WHERE price LIKE '${search.value}%'
-      ORDER BY ${sort.key} ${sort.value ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
+      const sql = `SELECT buses.bus_name, buses.classBus, routes.departure, routes.destination, schedules.departure_time, schedules.arrive_time, price, transactions.id 
+      FROM transactions JOIN buses ON transactions.id_bus=buses.id JOIN routes ON transactions.id_route=routes.id JOIN schedules ON transactions.id_schedule=schedules.id 
+      WHERE ${search.key} LIKE '${search.value}%' ORDER BY price ${sort.value ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {

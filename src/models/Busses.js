@@ -5,12 +5,13 @@ module.exports = {
     let { page, perPage, sort, search } = conditions
     page = page || 1
     perPage = perPage || 5
-    sort = sort || { key: 'id', value: '' }
+    sort = sort || { key: 'bus_name', value: '' }
     search = search || { key: 'bus_name', value: '' }
     const table = 'buses'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM ${table} WHERE ${search.key} LIKE '${search.value}%'
-      ORDER BY ${sort.key} ${sort.value ? 'ASC' : 'DESC'}  LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
+      const sql = `SELECT bus_name, bus_seat, classBus, routes.departure, routes.destination, buses.id FROM ${table}
+      JOIN routes ON buses.id_bus_route=routes.id WHERE ${search.key} LIKE '${search.value}%'
+      ORDER BY bus_name ${sort.value ? 'ASC' : 'DESC'}  LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {
@@ -58,7 +59,7 @@ module.exports = {
     // roleId = roleId || 3
     // idRoute = idRoute || 1
     picture = (typeof picture === 'string' ? `'${picture}'` : picture)
-    const sql = `INSERT INTO ${table} (picture, bus_name, bus_seat, class, id_bus_route) VALUES (${picture}, '${busName}', '${busSeat}', '${classBus}', ${idRoute})`
+    const sql = `INSERT INTO ${table} (picture, bus_name, bus_seat, classBus, id_bus_route) VALUES (${picture}, '${busName}', '${busSeat}', '${classBus}', ${idRoute})`
     return new Promise(function (resolve, reject) {
       console.log(sql)
       db.query(sql, function (err, results, fields) {
@@ -73,7 +74,7 @@ module.exports = {
   updateBus: function (id, picture, busName, busSeat, classBus, idRoute) {
     const table = 'buses'
     picture = (typeof picture === 'string' ? `'${picture}'` : picture)
-    const sql = `UPDATE ${table} SET picture=${picture}, bus_name='${busName}', bus_seat='${busSeat}', class='${classBus}', id_bus_route=${idRoute} WHERE id=${id}`
+    const sql = `UPDATE ${table} SET picture=${picture}, bus_name='${busName}', bus_seat='${busSeat}', classBus='${classBus}', id_bus_route=${idRoute} WHERE id=${id}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
         console.log(sql)

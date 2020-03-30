@@ -3,6 +3,7 @@ const Routes = require('express').Router()
 
 const routes = () => {
   Routes.get('/', RouteControllers.read)
+  Routes.get('/:id', RouteControllers.getRoute)
   Routes.post('/', RouteControllers.create)
   Routes.patch('/:id', RouteControllers.update)
   Routes.delete('/:id', RouteControllers.delete)

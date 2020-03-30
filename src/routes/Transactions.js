@@ -3,6 +3,7 @@ const Transactions = require('express').Router()
 
 const Transaction = () => {
   Transactions.get('/', TransactionsControllers.read)
+  Transactions.get('/:id', TransactionsControllers.getTransactions)
   Transactions.post('/', TransactionsControllers.create)
   Transactions.patch('/:id', TransactionsControllers.update)
   Transactions.delete('/:id', TransactionsControllers.delete)

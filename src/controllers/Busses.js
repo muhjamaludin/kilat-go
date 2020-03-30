@@ -2,35 +2,42 @@ const BusModel = require('../models/Busses')
 
 module.exports = {
   read: async function (req, res) {
-    // if (req.user.roleId !== 1) {
-    //   const data = {
-    //     success: false,
-    //     msg: 'You\'re not allowed to access this feature'
-    //   }
-    //   res.send(data)
-    // }
-    let { search, sort } = req.query
-    console.log(search)
+    let { page, limit, search, sort } = req.query
+    page = parseInt(page) || 1
+    limit = parseInt(limit) || 5
+
     let key = search && Object.keys(search)[0]
     let value = search && Object.values(search)[0]
-    search = (search && { key, value }) || { key: 'id', value: '' }
+    search = (search && { key, value }) || { key: 'bus_name', value: '' }
 
     key = sort && Object.keys(sort)[0]
     value = sort && Object.values(sort)[0]
     sort = (sort && { key, value }) || { key: 'id', value: 1 }
-    const conditions = { search, sort }
+    const conditions = { page, perPage: limit, search, sort }
+
     const results = await BusModel.getAllBus(conditions)
     results.forEach(function (o, i) {
-      results[i].picture = process.env.APP_USER_PICTURE_URI.concat(results[i].picture)
+      results[i].picture = process.env.APP_BUS_PICTURE_URI.concat(results[i].picture)
     })
-    conditions.totalData = await BusModel.getAllBus(conditions)
+    conditions.totalData = await BusModel.getTotalBus(conditions)
+    conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
+    conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`bus?page=${page + 1}`))
+    conditions.prevLink = (page <= 1 ? null : process.env.APP_URI.concat(`bus?page=${page - 1}`))
     delete conditions.search
     delete conditions.sort
+    delete conditions.limit
 
     const data = {
       success: true,
       data: results,
-      pageinfo: conditions
+      pageInfo: conditions
+    }
+    res.send(data)
+  },
+  getBus: async function (req, res) {
+    const data = {
+      success: true,
+      data: await BusModel.getBusById(req.params.id)
     }
     res.send(data)
   },

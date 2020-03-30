@@ -1,11 +1,13 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 require('dotenv').config()
+const cors = require('cors')
 
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(cors())
 
 const AuthMiddleware = require('./src/middleware/Auth')
 
@@ -36,13 +38,13 @@ const Reservations = require('./src/routes/Reservations')
 
 app.use('/auth', AuthRoutes)
 // app.use('/', root)
-app.use('/users', AuthMiddleware.checkAuthToken, UserRoutes)
-app.use('/bus', AuthMiddleware.checkAuthToken, BusRoutes)
-app.use('/route', AuthMiddleware.checkAuthToken, RouteRoutes)
-app.use('/schedule', AuthMiddleware.checkAuthToken, ScheduleRoutes)
-app.use('/transactions', AuthMiddleware.checkAuthToken, TransactionsRoutes)
-app.use('/agents', AuthMiddleware.checkAuthToken, AgentsRoutes)
-app.use('/reserve', AuthMiddleware.checkAuthToken, Reservations)
+app.use('/users', UserRoutes)
+app.use('/bus', BusRoutes)
+app.use('/route', RouteRoutes)
+app.use('/schedule', ScheduleRoutes)
+app.use('/transaction', TransactionsRoutes)
+app.use('/agents', AgentsRoutes)
+app.use('/reserve', Reservations)
 
 app.listen(process.env.APP_PORT, function () {
   console.log(`App Listen on Port ${process.env.APP_PORT}`)

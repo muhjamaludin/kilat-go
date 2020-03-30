@@ -10,6 +10,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 Users.get('/', UserControllers.read)
+Users.get('/:id', UserControllers.getUser)
 Users.post('/', UserControllers.create)
 Users.patch('/:id', UserControllers.update)
 Users.delete('/:id', UserControllers.delete)

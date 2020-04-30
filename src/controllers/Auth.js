@@ -69,13 +69,15 @@ module.exports = {
     } else {
       const encryptedPassword = await bcrypt.hashSync(password)
       const results = await UserModel.createUser(username, encryptedPassword)
-      const resul = await UserModel.createUserDetail(email, phone)
-      if (results && resul) {
+      const info = await UserModel.getIdByUsername(username)
+      console.log(info[0].id)
+      await UserModel.createUserDetail(info[0].id, email, phone)
+      if (results) {
         if (await AuthModel.createVerificationCode(results, uuid())) {
           const data = {
             success: true,
             msg: 'Register Successfully',
-            datauser: `${results}, ${resul}`
+            id_user: `${results}`
           }
           res.send(data)
         } else {

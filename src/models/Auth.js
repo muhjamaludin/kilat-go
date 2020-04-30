@@ -4,9 +4,7 @@ module.exports = {
   checkUsername: function (username) {
     const table = 'users'
     return new Promise(function (resolve, reject) {
-      console.log(username)
       const sql = `SELECT COUNT (*) AS total FROM ${table} WHERE username='${username}'`
-      console.log(sql)
       db.query(sql, function (err, results, fields) {
         if (err) {
           reject(err)

@@ -67,6 +67,20 @@ module.exports = {
       })
     })
   },
+  getIdByUsername: function (username) {
+    const table = 'users'
+    return new Promise(function (resolve, reject) {
+      const sql = `SELECT * FROM ${table} WHERE username='${username}'`
+      console.log(sql)
+      db.query(sql, function (err, results, fields) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(results)
+        }
+      })
+    })
+  },
   getAllUserDetail: function () {
     const table = 'user_details'
     return new Promise(function (resolve, reject) {
@@ -107,19 +121,19 @@ module.exports = {
       })
     })
   },
-  createUserDetail: function (email, phone) {
+  createUserDetail: function (idUser, email, phone) {
     const table = 'user_details'
-    const picture = null
+    const picture = 'jpg'
     const identity = 0
-    const firstname = 'firstname'
-    const lastname = 'lastname'
-    const gender = 'men'
+    const fullname = 'name'
+    const gender = 'gender'
     const address = 'address'
     const balance = 0
-    const sql = `INSERT INTO ${table} (profile_picture, identity, firstname, lastname, gender, email, phone, address, balance) VALUES 
-    (${picture}, ${identity}, '${firstname}', '${lastname}', '${gender}', '${email}', ${phone}, '${address}', ${balance})`
+    const sql = `INSERT INTO ${table} (id_user, profile_picture, identity, fullname, gender, email, phone, address, balance) VALUES 
+    (${idUser}, '${picture}', ${identity}, '${fullname}', '${gender}', '${email}', ${phone}, '${address}', ${balance})`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
+        console.log(sql)
         if (err) {
           reject(err)
         } else {

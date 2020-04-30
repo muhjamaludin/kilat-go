@@ -185,9 +185,8 @@ module.exports = {
   },
   delete: async function (req, res) {
     const { id } = req.params
-    // const results = await UserModel.deleteUser(id)
-    const resultDetails = await UserModel.deleteUserDetail(id)
-    if (resultDetails) {
+    const results = await UserModel.deleteUser(id)
+    if (results) {
       const data = {
         success: true,
         msg: `Users with id ${id} has been deleted!`

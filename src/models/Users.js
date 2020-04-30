@@ -200,23 +200,6 @@ module.exports = {
   },
   deleteUser: function (id) {
     const table = 'users'
-    const sql = `UPDATE ${table} SET id=0 WHERE id=${id}`
-    return new Promise(function (resolve, reject) {
-      db.query(sql, function (err, results, fields) {
-        if (err) {
-          reject(err)
-        } else {
-          if (results.affectedRows) {
-            resolve(true)
-          } else {
-            resolve(false)
-          }
-        }
-      })
-    })
-  },
-  deleteUserDetail: function (id) {
-    const table = 'user_details'
     const sql = `DELETE FROM ${table} WHERE id=${id}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {

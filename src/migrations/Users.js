@@ -53,7 +53,7 @@ db.query(`
     phone VARCHAR(16) NOT NULL,
     address VARCHAR(60) NOT NULL,
     balance INT(8) NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES users(id), 
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE, 
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
   )

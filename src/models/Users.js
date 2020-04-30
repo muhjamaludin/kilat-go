@@ -9,7 +9,8 @@ module.exports = {
     search = search || { key: 'username', value: '' }
     const table = 'users'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM ${table} WHERE username LIKE '${search.value}%'
+      const sql = `SELECT users.id, user_details.profile_picture, users.username, user_details.fullname, user_details.identity, user_details.gender, user_details.phone, user_details.address 
+      FROM ${table} JOIN user_details ON users.id=user_details.id_user WHERE ${search.key} LIKE '${search.value}%'
       ORDER BY ${sort.key} ${parseInt(sort.value) ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
@@ -41,7 +42,7 @@ module.exports = {
     const table = 'users'
     return new Promise(function (resolve, reject) {
       const sql = `
-      SELECT COUNT (*) AS total FROM ${table}
+      SELECT COUNT (*)/2 AS total FROM ${table} JOIN user_details
       WHERE ${search.key} LIKE '${search.value}%'`
       console.log(sql)
       db.query(sql, function (err, results, fields) {

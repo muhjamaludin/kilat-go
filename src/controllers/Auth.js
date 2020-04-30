@@ -113,8 +113,9 @@ module.exports = {
     }
   },
   forgotPassword: async function (req, res) {
-    const { username } = req.body
+    const { username, password } = req.body
     const { change } = req.query
+    console.log(change)
     if (!change) {
       const user = await AuthModel.checkUsername(username)
       if (user) {
@@ -141,7 +142,6 @@ module.exports = {
         res.send(data)
       }
     } else {
-      const { password } = req.body
       if (password === req.body.confirm_password) {
         const encryptedPassword = bcrypt.hashSync(password)
         if (await AuthModel.forgotPassword(change, encryptedPassword)) {

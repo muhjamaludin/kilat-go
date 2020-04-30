@@ -39,16 +39,41 @@ module.exports = {
     res.send(data)
   },
   create: async function (req, res) {
-    const { idUser, name } = req.body
-    // insert data into database with model
-    const results = await AgentsModel.createAgents(idUser, name)
-
-    const data = {
-      success: true,
-      msg: `Agent ${name} has been created`,
-      data: { id: results, ...req.body }
+    if (req.user.roleId !== 1) {
+      const data = {
+        success: false,
+        msg: 'Access not allowed'
+      }
+      res.send(data)
+    } else {
+      const { idUser, name } = req.body
+      const results = await AgentsModel.createAgents(idUser, name)
+      const data = {
+        success: true,
+        msg: `Agent ${name} has been created`,
+        data: { id: results, ...req.body }
+      }
+      res.send(data)
     }
-    res.send(data)
+  },
+  createById: async function (req, res) {
+    if (req.user.roleId !== (1 || 2)) {
+      const data = {
+        success: false,
+        msg: 'Access not allowed'
+      }
+      res.send(data)
+    } else {
+      const { id } = req.params
+      const { name } = req.body
+      const results = await AgentsModel.updateAgentById(id, name)
+      const data = {
+        success: true,
+        msg: `Agent ${name} has been created`,
+        data: { id: results, ...req.body }
+      }
+      res.send(data)
+    }
   },
   update: async function (req, res) {
     const { id } = req.params

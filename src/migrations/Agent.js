@@ -13,7 +13,7 @@ db.query(`
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_user INT NOT NULL,
     name VARCHAR(30) NOT NULL,
-    FOREIGN KEY (id_user) REFERENCES user_details (id),
+    FOREIGN KEY (id_user) REFERENCES users (id) ON DELETE CASCADE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
   )

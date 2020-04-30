@@ -55,8 +55,20 @@ module.exports = {
   },
   createAgents: function (idUser, name) {
     const table = 'agents'
-    // roleId = roleId || 3
     const sql = `INSERT INTO ${table} (id_user, name) VALUES ('${idUser}', '${name}')`
+    return new Promise(function (resolve, reject) {
+      db.query(sql, function (err, results, fields) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(results.insertId)
+        }
+      })
+    })
+  },
+  updateAgentById: function (idUser, name) {
+    const table = 'agents'
+    const sql = `UPDATE ${table} (name) VALUES ('${name}') WHERE id_user=${idUser}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
         if (err) {

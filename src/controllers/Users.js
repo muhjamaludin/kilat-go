@@ -183,6 +183,24 @@ module.exports = {
       res.send(data)
     }
   },
+  updateRoleId: async function (req, res) {
+    const { id, RoleId } = req.body
+    console.log(id, RoleId)
+    const result = await UserModel.EditRole(id, RoleId)
+    if (result) {
+      const data = {
+        succes: true,
+        msg: `Your role id has been update to be ${RoleId}`
+      }
+      res.send(data)
+    } else {
+      const data = {
+        succes: false,
+        msg: 'failed edit Role Id'
+      }
+      res.send(data)
+    }
+  },
   delete: async function (req, res) {
     const { id } = req.params
     const results = await UserModel.deleteUser(id)

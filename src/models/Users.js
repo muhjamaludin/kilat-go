@@ -9,7 +9,7 @@ module.exports = {
     search = search || { key: 'username', value: '' }
     const table = 'users'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT users.id, user_details.profile_picture, users.username, user_details.fullname, user_details.identity, user_details.gender, 
+      const sql = `SELECT users.id, users.role_id, user_details.profile_picture, users.username, user_details.fullname, user_details.identity, user_details.gender, 
       user_details.phone, user_details.address, user_details.balance 
       FROM ${table} JOIN user_details ON users.id=user_details.id_user WHERE ${search.key} LIKE '${search.value}%'
       ORDER BY ${sort.key} ${parseInt(sort.value) ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
@@ -26,7 +26,7 @@ module.exports = {
   getUserById: function (id) {
     const table = 'users'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT users.id, user_details.profile_picture, users.username, user_details.fullname, user_details.identity, user_details.gender, 
+      const sql = `SELECT users.id, users.role_id, user_details.profile_picture, users.username, user_details.fullname, user_details.identity, user_details.gender, 
       user_details.phone, user_details.address, user_details.balance 
       FROM ${table} JOIN user_details ON users.id=user_details.id_user WHERE users.id=${id}`
       db.query(sql, function (err, results, fields) {
@@ -221,6 +221,24 @@ module.exports = {
   topup: function (id, balance) {
     const table = 'user_details'
     const sql = `UPDATE ${table} SET balance=${balance} WHERE id_user=${id}`
+    return new Promise(function (resolve, reject) {
+      db.query(sql, function (err, results, fields) {
+        console.log(sql)
+        if (err) {
+          reject(err)
+        } else {
+          if (results.affectedRows) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        }
+      })
+    })
+  },
+  EditRole: function (id, RoleId) {
+    const table = 'users'
+    const sql = `UPDATE ${table} SET role_id=${RoleId} WHERE id=${id}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
         console.log(sql)

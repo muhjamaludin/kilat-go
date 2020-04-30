@@ -30,6 +30,22 @@ module.exports = {
       })
     })
   },
+  getUserById: function (id) {
+    const table = 'users'
+    return new Promise(function (resolve, reject) {
+      db.query(`SELECT * FROM ${table} WHERE id='${id}'`, function (err, results, fields) {
+        if (err) {
+          reject(err)
+        } else {
+          if (results.length) {
+            resolve(results[0])
+          } else {
+            resolve(false)
+          }
+        }
+      })
+    })
+  },
   createVerificationCode: function (id, code) {
     const table = 'users'
     return new Promise(function (resolve, reject) {

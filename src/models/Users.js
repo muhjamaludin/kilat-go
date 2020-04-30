@@ -39,6 +39,22 @@ module.exports = {
       })
     })
   },
+  getUserByRoleId: function (id) {
+    const table = 'users'
+    return new Promise(function (resolve, reject) {
+      const sql = `SELECT users.id, user_details.profile_picture, users.username, user_details.fullname, user_details.identity, user_details.gender, 
+      user_details.phone, user_details.address, user_details.balance 
+      FROM ${table} JOIN user_details ON users.id=user_details.id_user WHERE users.id=${id}`
+      db.query(sql, function (err, results, fields) {
+        console.log(sql)
+        if (err) {
+          reject(err)
+        } else {
+          resolve(results)
+        }
+      })
+    })
+  },
   getTotalUsers: function (conditions = {}) {
     let { search } = conditions
     search = search || { key: 'username', value: '' }
@@ -149,6 +165,23 @@ module.exports = {
   updateUser: function (id, username, password) {
     const table = 'users'
     const sql = `UPDATE ${table} SET username='${username}', password='${password}' WHERE id=${id}`
+    return new Promise(function (resolve, reject) {
+      db.query(sql, function (err, results, fields) {
+        if (err) {
+          reject(err)
+        } else {
+          if (results.affectedRows) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        }
+      })
+    })
+  },
+  updatePassword: function (id, password) {
+    const table = 'users'
+    const sql = `UPDATE ${table} SET password='${password}' WHERE id=${id}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
         if (err) {

@@ -38,7 +38,7 @@ const Reservations = require('./src/routes/Reservations')
 
 app.use('/auth', AuthRoutes)
 // app.use('/', root)
-app.use('/users', UserRoutes)
+app.use('/users', AuthMiddleware.checkAuthToken, UserRoutes)
 app.use('/bus', BusRoutes)
 app.use('/route', RouteRoutes)
 app.use('/schedule', ScheduleRoutes)

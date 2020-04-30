@@ -40,7 +40,6 @@ module.exports = {
   },
   create: async function (req, res) {
     const { departure, arrive } = req.body
-    // insert data into database with model
     const results = await ScheduleModel.createSchedule(departure, arrive)
 
     const data = {
@@ -76,7 +75,7 @@ module.exports = {
     if (results) {
       const data = {
         success: true,
-        msg: `Bus with id ${id} has been deleted!`
+        msg: `Schedule with id ${id} has been deleted!`
       }
       res.send(data)
     } else {

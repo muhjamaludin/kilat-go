@@ -17,6 +17,6 @@ Users.patch('/userdetail/:idUser', UserControllers.updateUser)
 Users.patch('/userdetail/picture/:idUser', upload.single('photo'), UserControllers.updatePhoto)
 Users.delete('/:id', UserControllers.delete)
 
-Users.post('/topup', UserControllers.topup)
+Users.patch('/topup/:idUser', UserControllers.topup)
 
 module.exports = Users

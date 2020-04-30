@@ -201,12 +201,14 @@ module.exports = {
     }
   },
   topup: async function (req, res) {
-    const { id, balance } = req.body
-    const result = await UserModel.topup(id, balance)
+    const { idUser } = req.params
+    const { balance } = req.body
+    console.log('id', idUser, 'saldo', balance)
+    const result = await UserModel.topup(idUser, balance)
     if (result) {
       const data = {
         succes: true,
-        msg: `You balance has been added with ${balance} rupiah`
+        msg: `Your balance has been added with ${balance} rupiah`
       }
       res.send(data)
     } else {

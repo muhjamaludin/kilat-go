@@ -46,7 +46,7 @@ db.query(`
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_user INT NOT NULL,
     profile_picture TEXT,
-    identity INT(16) NOT NULL,
+    identity VARCHAR(16) NOT NULL,
     fullname VARCHAR(15) NOT NULL,
     gender VARCHAR(10) NOT NULL,
     email VARCHAR(20) NOT NULL,

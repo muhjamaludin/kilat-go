@@ -160,13 +160,12 @@ module.exports = {
       })
     })
   },
-  updateUserDetail: function (id, picture, identity, firstname, lastname, gender, email, phone, address, balance) {
+  updateUserDetail: function (idUser, identity, fullname, gender, email, phone, address) {
     const table = 'user_details'
-    picture = (typeof picture === 'string' ? `'${picture}'` : picture)
-    const sql = `UPDATE ${table} SET profile_picture=${picture}, identity=${identity}, firstname='${firstname}', lastname='${lastname}', 
-    gender='${gender}', email='${email}', phone=${phone}, address='${address}', balance=${balance} WHERE id=${id}`
+    const sql = `UPDATE ${table} SET identity=${identity}, fullname='${fullname}', gender='${gender}', email='${email}', phone=${phone}, address='${address}' WHERE id_user=${idUser}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
+        console.log(sql)
         if (err) {
           reject(err)
         } else {

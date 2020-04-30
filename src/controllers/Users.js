@@ -52,7 +52,7 @@ module.exports = {
       }
       res.send(data)
     }
-    if (req.user.userId == id) {
+    if (req.user.userId === id) {
       const result = await UserModel.getOneUserDetail(id)
       const data = {
         succes: true,
@@ -110,6 +110,33 @@ module.exports = {
     }
   },
   updateUser: async function (req, res) {
+    const { idUser } = req.params
+    console.log('id user', idUser)
+    // if (req.user.roleId !== 1) {
+    //   const data = {
+    //     success: false,
+    //     msg: 'You\'re not allowed to access this feature'
+    //   }
+    //   res.send(data)
+    // }
+    const { identity, fullname, gender, email, phone, address } = req.body
+    const results = await UserModel.updateUserDetail(idUser, identity, fullname, gender, email, phone, address)
+    if (results) {
+      const data = {
+        success: true,
+        msg: `User with id ${idUser} has been updated!`,
+        data: { idUser, ...req.body }
+      }
+      res.send(data)
+    } else {
+      const data = {
+        success: false,
+        msg: 'There is no data can be updated'
+      }
+      res.send(data)
+    }
+  },
+  updatPhoto: async function (req, res) {
     const { id } = req.body
     if (req.user.roleId !== 1) {
       const data = {

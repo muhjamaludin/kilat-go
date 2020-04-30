@@ -1,13 +1,17 @@
 const db = require('../utils/db')
 
 module.exports = {
-  getAllReservation: function (idFrom, idTo) {
-    const table = 'transactions'
+  getAllReservations: function (conditions = {}) {
+    let { page, perPage, sort, search } = conditions
+    page = page || 1
+    perPage = perPage || 5
+    sort = sort || { key: 'bus_name', value: '' }
+    search = search || { key: 'bus_name', value: '' }
+    const table = 'reservations'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT buses.bus_name, buses.class, buses.bus_seat, routes.departure, routes.destination, schedules.departure_time, 
-      schedules.arrive_time, price FROM ${table} JOIN buses ON transactions.id_bus=buses.id JOIN
-      routes ON transactions.id_route=routes.id JOIN schedules ON transactions.id_schedule=schedules.id
-      WHERE routes.id=${idFrom}`
+      const sql = `SELECT users.username, buses.bus_name, buses.classBus, routes.departure, routes.destination, schedules.departure_time, schedules.arrive_time, seat from 
+      ${table} join users on reservations.id_user=users.id join buses on reservations.id_bus=buses.id join routes on reservations.id_route=routes.id 
+      join schedules on reservations.id_schedule=schedules.id `
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {
@@ -18,15 +22,34 @@ module.exports = {
       })
     })
   },
-  getReservation: function () {
-    const table = 'transactions'
+  getReservationById: function (id) {
+    const table = 'reservations'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM ${table}`
+      const sql = `SELECT * FROM ${table} WHERE id=${id}`
       db.query(sql, function (err, results, fields) {
+        console.log(sql)
         if (err) {
           reject(err)
         } else {
           resolve(results)
+        }
+      })
+    })
+  },
+  getTotalReservation: function (conditions = {}) {
+    let { search } = conditions
+    search = search || { key: 'bus_name', value: '' }
+    const table = 'reservations'
+    return new Promise(function (resolve, reject) {
+      const sql = `
+      SELECT COUNT (*) AS total FROM ${table}
+      WHERE ${search.key} LIKE '${search.value}%'`
+      console.log(sql)
+      db.query(sql, function (err, results, fields) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(results[0].total)
         }
       })
     })

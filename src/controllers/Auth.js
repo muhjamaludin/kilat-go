@@ -24,12 +24,14 @@ module.exports = {
         if (await AuthModel.checkVerifiedUser(info.id)) {
           if (await AuthModel.checkActivatedUser(info.id)) {
             const payload = { username, roleId: info.role_id, userId: info.id }
+            const roleId = payload.roleId
             const options = { expiresIn: '30m' }
             const key = process.env.APP_KEY
             const token = jwt.sign(payload, key, options)
             const data = {
               success: true,
-              token
+              token,
+              roleId
             }
             res.send(data)
           } else {
@@ -56,7 +58,7 @@ module.exports = {
     }
   },
   register: async function (req, res) {
-    const { username, password } = await req.body
+    const { username, password, email, phone } = await req.body
     const checkUser = await AuthModel.checkUsername(username)
     if (checkUser !== 0) {
       const data = {
@@ -67,19 +69,19 @@ module.exports = {
     } else {
       const encryptedPassword = await bcrypt.hashSync(password)
       const results = await UserModel.createUser(username, encryptedPassword)
-      // const resul = await UserModel.createUserDetail(email, phone)
-      if (results) {
+      const resul = await UserModel.createUserDetail(email, phone)
+      if (results && resul) {
         if (await AuthModel.createVerificationCode(results, uuid())) {
           const data = {
             success: true,
             msg: 'Register Successfully',
-            datauser: `${results}`
+            datauser: `${results}, ${resul}`
           }
           res.send(data)
         } else {
           const data = {
             success: false,
-            msg: 'Verification code couldn\'t be generated'
+            msg: "Verification code couldn't be generated"
           }
           res.send(data)
         }
@@ -156,7 +158,7 @@ module.exports = {
       } else {
         const data = {
           success: false,
-          msg: 'Confirm password doesn\'t match'
+          msg: "Confirm password doesn't match"
         }
         res.send(data)
       }

@@ -2,21 +2,39 @@ const ReservationModel = require('../models/Reservations')
 
 module.exports = {
   read: async function (req, res) {
-    // if (req.user.roleId !== 1) {
-    //   const data = {
-    //     success: false,
-    //     msg: 'You\'re not allowed to access this feature'
-    //   }
-    //   res.send(data)
-    // }
-    // const { from, to } = req.params
-    const { idFrom, idTo } = req.body
+    let { page, limit, search, sort } = req.query
+    page = parseInt(page) || 1
+    limit = parseInt(limit) || 5
 
-    const results = await ReservationModel.getAllReservation(idFrom, idTo)
+    let key = search && Object.keys(search)[0]
+    let value = search && Object.values(search)[0]
+    search = (search && { key, value }) || { key: 'seat', value: '' }
+
+    key = sort && Object.keys(sort)[0]
+    value = sort && Object.values(sort)[0]
+    sort = (sort && { key, value }) || { key: 'id', value: 1 }
+    const conditions = { page, perPage: limit, search, sort }
+
+    const results = await ReservationModel.getAllReservations(conditions)
+    conditions.totalData = await ReservationModel.getTotalReservation(conditions)
+    conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
+    conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`agents?page=${page + 1}`))
+    conditions.prevLink = (page <= 1 ? null : process.env.APP_URI.concat(`agents?page=${page - 1}`))
+    delete conditions.search
+    delete conditions.sort
+    delete conditions.limit
 
     const data = {
       success: true,
-      data: results
+      data: results,
+      pageInfo: conditions
+    }
+    res.send(data)
+  },
+  getReservation: async function (req, res) {
+    const data = {
+      success: true,
+      data: await ReservationModel.getReservationById(req.params.id)
     }
     res.send(data)
   },

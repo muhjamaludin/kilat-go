@@ -4,7 +4,7 @@ const Schedules = require('express').Router()
 const Schedule = () => {
   Schedules.get('/', ScheduleControllers.read)
   Schedules.get('/:id', ScheduleControllers.getSchedule)
-  Schedules.post('/', ScheduleControllers.create)
+  Schedules.post('/add', ScheduleControllers.create)
   Schedules.patch('/:id', ScheduleControllers.update)
   Schedules.delete('/:id', ScheduleControllers.delete)
 }

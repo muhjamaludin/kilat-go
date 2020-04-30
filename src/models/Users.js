@@ -107,16 +107,15 @@ module.exports = {
       })
     })
   },
-  createUserDetail: function (picture, identity, firstname, lastname, gender, email, phone, address, balance) {
+  createUserDetail: function (email, phone) {
     const table = 'user_details'
-    // picture = picture || null
-    // identity = identity || 0
-    // firstname = firstname || 'your firstname'
-    // lastname = lastname || 'your lastname'
-    // gender = gender || 'men'
-    // address = address || 'your address'
-    // balance = balance || 0
-    picture = (typeof picture === 'string' ? `'${picture}'` : picture)
+    const picture = null
+    const identity = 0
+    const firstname = 'firstname'
+    const lastname = 'lastname'
+    const gender = 'men'
+    const address = 'address'
+    const balance = 0
     const sql = `INSERT INTO ${table} (profile_picture, identity, firstname, lastname, gender, email, phone, address, balance) VALUES 
     (${picture}, ${identity}, '${firstname}', '${lastname}', '${gender}', '${email}', ${phone}, '${address}', ${balance})`
     return new Promise(function (resolve, reject) {

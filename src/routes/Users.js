@@ -2,7 +2,7 @@ const UserControllers = require('../controllers/Users')
 const Users = require('express').Router()
 const multer = require('multer')
 const storage = multer.diskStorage({
-  destination: 'files/propil/',
+  destination: 'files/profile/',
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`)
   }
@@ -14,7 +14,7 @@ Users.get('/:id', UserControllers.getUser)
 Users.get('/userdetail', UserControllers.readUser)
 Users.patch('/:id', UserControllers.update)
 Users.patch('/userdetail/:idUser', UserControllers.updateUser)
-Users.patch('/userdetail/picture/:id', upload.any('picture'), UserControllers.updatPhoto)
+Users.patch('/userdetail/picture/:idUser', upload.single('photo'), UserControllers.updatePhoto)
 Users.delete('/:id', UserControllers.delete)
 
 Users.post('/topup', UserControllers.topup)

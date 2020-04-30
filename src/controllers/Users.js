@@ -136,31 +136,23 @@ module.exports = {
       res.send(data)
     }
   },
-  updatPhoto: async function (req, res) {
-    const { id } = req.body
-    if (req.user.roleId !== 1) {
-      const data = {
-        success: false,
-        msg: 'You\'re not allowed to access this feature'
-      }
-      res.send(data)
-    }
-    const picture = (req.file && req.file.filename) || null
-    const { identity, firstname, lastname, gender, email, phone, address, balance } = req.body
-    // if ((idUser || picture || identity || firstname || lastname || gender || email || phone || address || balance) === '') {
+  updatePhoto: async function (req, res) {
+    const { idUser } = req.params
+    // if (req.user.roleId !== 1) {
     //   const data = {
-    //     succes: false,
-    //     msg: 'You must enter all required'
+    //     success: false,
+    //     msg: 'You\'re not allowed to access this feature'
     //   }
     //   res.send(data)
     // }
-    // if (req.res.userId == id) {
-    const results = await UserModel.updateUserDetail(id, picture, identity, firstname, lastname, gender, email, phone, address, balance)
+    const photo = (req.file && req.file.filename) || null
+    console.log(req.file)
+    const results = await UserModel.updatePhotoUser(idUser, photo)
     if (results) {
       const data = {
         success: true,
-        msg: `User with id ${id} has been updated!`,
-        data: { id, ...req.body }
+        msg: `Photo with id ${idUser} has been updated!`,
+        data: { idUser, ...req.body }
       }
       res.send(data)
     } else {

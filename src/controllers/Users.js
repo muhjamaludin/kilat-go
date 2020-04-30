@@ -25,9 +25,9 @@ module.exports = {
       const conditions = { page, perPage: limit, search, sort }
 
       const results = await UserModel.getAllUsers(conditions)
-      results.forEach(function (o, i) {
-        results[i].picture = process.env.APP_USER_PICTURE_URI.concat(results[i].picture)
-      })
+      // results.forEach(function (o, i) {
+      //   results[i].picture = process.env.APP_USER_PICTURE_URI.concat(results[i].picture)
+      // })
       conditions.totalData = await UserModel.getTotalUsers(conditions)
       conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
       conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`users?page=${page + 1}`))

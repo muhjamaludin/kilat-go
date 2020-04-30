@@ -8,8 +8,8 @@ const Agent = () => {
   Agents.get('/:id', AgentsControllers.getAgent)
   Agents.post('/add', AuthMiddleware.checkAuthToken, AgentsControllers.create)
   Agents.patch('/:id', AuthMiddleware.checkAuthToken, AgentsControllers.createById)
-  Agents.patch('/:id', AgentsControllers.update)
-  Agents.delete('/:id', AgentsControllers.delete)
+  // Agents.patch('/:id', AgentsControllers.update)
+  Agents.delete('/:id', AuthMiddleware.checkAuthToken, AgentsControllers.delete)
 }
 
 Agent()

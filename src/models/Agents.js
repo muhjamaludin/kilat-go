@@ -66,36 +66,36 @@ module.exports = {
       })
     })
   },
-  updateAgentById: function (idUser, name) {
+  updateAgentById: function (id, name) {
     const table = 'agents'
-    const sql = `UPDATE ${table} (name) VALUES ('${name}') WHERE id_user=${idUser}`
+    const sql = `UPDATE ${table} SET name='${name}' WHERE id=${id}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
         if (err) {
           reject(err)
         } else {
-          resolve(results.insertId)
+          resolve(results.affectedRows)
         }
       })
     })
   },
-  updateAgents: function (id, idUser, name) {
-    const table = 'agents'
-    const sql = `UPDATE ${table} SET id_user='${idUser}', name='${name}' WHERE id=${id}`
-    return new Promise(function (resolve, reject) {
-      db.query(sql, function (err, results, fields) {
-        if (err) {
-          reject(err)
-        } else {
-          if (results.affectedRows) {
-            resolve(true)
-          } else {
-            resolve(false)
-          }
-        }
-      })
-    })
-  },
+  // updateAgents: function (id, idUser, name) {
+  //   const table = 'agents'
+  //   const sql = `UPDATE ${table} SET id_user='${idUser}', name='${name}' WHERE id=${id}`
+  //   return new Promise(function (resolve, reject) {
+  //     db.query(sql, function (err, results, fields) {
+  //       if (err) {
+  //         reject(err)
+  //       } else {
+  //         if (results.affectedRows) {
+  //           resolve(true)
+  //         } else {
+  //           resolve(false)
+  //         }
+  //       }
+  //     })
+  //   })
+  // },
   deleteAgents: function (id) {
     const table = 'agents'
     const sql = `DELETE FROM ${table} WHERE id=${id}`

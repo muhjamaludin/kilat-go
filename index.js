@@ -16,7 +16,7 @@ app.get('/migrate', function (req, res) {
   require('./src/migrations/Busses')
   require('./src/migrations/Routes')
   require('./src/migrations/Schedules')
-  require('./src/migrations/Transactions')
+  require('./src/migrations/Prices')
   require('./src/migrations/Reservations')
   require('./src/migrations/Agent')
   const data = {
@@ -27,25 +27,23 @@ app.get('/migrate', function (req, res) {
 })
 
 const AuthRoutes = require('./src/routes/Auth')
-// const root = require('./src/routes/Reservations')
 const UserRoutes = require('./src/routes/Users')
 const BusRoutes = require('./src/routes/Busses')
 const RouteRoutes = require('./src/routes/Routes')
 const ScheduleRoutes = require('./src/routes/Schedules')
-const TransactionsRoutes = require('./src/routes/Transactions')
+const PricesRoutes = require('./src/routes/Prices')
 const AgentsRoutes = require('./src/routes/Agents')
 const Reservations = require('./src/routes/Reservations')
 
 app.use('/auth', AuthRoutes)
-// app.use('/', root)
 app.use('/users', AuthMiddleware.checkAuthToken, UserRoutes)
 app.use('/bus', BusRoutes)
 app.use('/route', RouteRoutes)
 app.use('/schedule', ScheduleRoutes)
-app.use('/transaction', TransactionsRoutes)
+app.use('/price', PricesRoutes)
 app.use('/agents', AgentsRoutes)
 app.use('/reserve', Reservations)
 
-app.listen(process.env.APP_PORT, function () {
+app.listen(process.env.APP_PORT || 8080, function () {
   console.log(`App Listen on Port ${process.env.APP_PORT}`)
 })

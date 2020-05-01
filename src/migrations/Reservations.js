@@ -13,7 +13,7 @@ db.query(`
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_price INT,
     schedule DATE,
-    Seat VARCHAR(4),
+    seat VARCHAR(4),
     FOREIGN KEY (id_price) REFERENCES prices(id) ON DELETE CASCADE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP

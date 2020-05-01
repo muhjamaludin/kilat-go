@@ -18,12 +18,14 @@ const upload = multer({
   }
 })
 
+const AuthMiddleware = require('../middleware/Auth')
+
 const busses = () => {
   Busses.get('/', BusControllers.read)
   Busses.get('/:id', BusControllers.getBus)
-  Busses.post('/add', upload.single('picture'), BusControllers.create)
-  Busses.patch('/:id', upload.single('picture'), BusControllers.update)
-  Busses.delete('/:id', BusControllers.delete)
+  Busses.post('/add', AuthMiddleware.checkAuthToken, upload.single('picture'), BusControllers.create)
+  Busses.patch('/:id', AuthMiddleware.checkAuthToken, upload.single('picture'), BusControllers.update)
+  Busses.delete('/:id', AuthMiddleware.checkAuthToken, BusControllers.delete)
 }
 
 busses()

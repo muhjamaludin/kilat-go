@@ -9,8 +9,7 @@ module.exports = {
     search = search || { key: 'bus_name', value: '' }
     const table = 'buses'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT bus_name, bus_seat, classBus, routes.departure, routes.destination, buses.id FROM ${table}
-      JOIN routes ON buses.id_bus_route=routes.id WHERE ${search.key} LIKE '${search.value}%'
+      const sql = `SELECT * FROM ${table} WHERE ${search.key} LIKE '${search.value}%'
       ORDER BY bus_name ${sort.value ? 'ASC' : 'DESC'}  LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
@@ -54,12 +53,11 @@ module.exports = {
       })
     })
   },
-  createBus: function (picture, busName, busSeat, classBus, idRoute) {
+  createBus: function (idAgent, idBusRoute, idBusSchedule, picture, busName, classBus, busSeat) {
     const table = 'buses'
-    // roleId = roleId || 3
-    // idRoute = idRoute || 1
     picture = (typeof picture === 'string' ? `'${picture}'` : picture)
-    const sql = `INSERT INTO ${table} (picture, bus_name, bus_seat, classBus, id_bus_route) VALUES (${picture}, '${busName}', '${busSeat}', '${classBus}', ${idRoute})`
+    const sql = `INSERT INTO ${table} (id_agents, id_bus_route, id_bus_schedule, picture, bus_name, class_bus, bus_seat) VALUES 
+    (${idAgent}, ${idBusRoute}, ${idBusSchedule}, ${picture}, '${busName}', '${classBus}', ${busSeat})`
     return new Promise(function (resolve, reject) {
       console.log(sql)
       db.query(sql, function (err, results, fields) {

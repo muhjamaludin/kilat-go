@@ -16,9 +16,9 @@ module.exports = {
     const conditions = { page, perPage: limit, search, sort }
 
     const results = await BusModel.getAllBus(conditions)
-    results.forEach(function (o, i) {
-      results[i].picture = process.env.APP_BUS_PICTURE_URI.concat(results[i].picture)
-    })
+    // results.forEach(function (o, i) {
+    //   results[i].picture = process.env.APP_BUS_PICTURE_URI.concat(results[i].picture)
+    // })
     conditions.totalData = await BusModel.getTotalBus(conditions)
     conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
     conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`bus?page=${page + 1}`))
@@ -42,12 +42,9 @@ module.exports = {
     res.send(data)
   },
   create: async function (req, res) {
-    // if user upload a picture
     const picture = (req.file && req.file.filename) || null
-    const { busName, busSeat, classBus, idRoute } = req.body
-
-    const results = await BusModel.createBus(picture, busName, busSeat, classBus, idRoute)
-
+    const { idAgent, idBusRoute, idBusSchedule, busName, classBus, busSeat } = req.body
+    const results = await BusModel.createBus(idAgent, idBusRoute, idBusSchedule, picture, busName, classBus, busSeat)
     const data = {
       success: true,
       msg: `Bus ${busName} with ${busSeat} and class ${classBus} seat has been created`,

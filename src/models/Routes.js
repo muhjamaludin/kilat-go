@@ -35,27 +35,26 @@ module.exports = {
       })
     })
   },
-getTotalRoute: function (conditions = {}) {
-  let { search } = conditions
-  search = search || { key: 'routes', value: '' }
-  const table = 'routes'
-  return new Promise(function (resolve, reject) {
-    const sql = `
+  getTotalRoute: function (conditions = {}) {
+    let { search } = conditions
+    search = search || { key: 'routes', value: '' }
+    const table = 'routes'
+    return new Promise(function (resolve, reject) {
+      const sql = `
     SELECT COUNT (*) AS total FROM ${table}
     WHERE ${search.key} LIKE '${search.value}%'`
-    console.log(sql)
-    db.query(sql, function (err, results, fields) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(results[0].total)
-      }
+      console.log(sql)
+      db.query(sql, function (err, results, fields) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(results[0].total)
+        }
+      })
     })
-  })
-},
+  },
   createRoute: function (departure, destination) {
     const table = 'routes'
-    // roleId = roleId || 3
     const sql = `INSERT INTO ${table} (departure, destination) VALUES ('${departure}', '${destination}')`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {

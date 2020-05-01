@@ -76,7 +76,7 @@ module.exports = {
     if (results) {
       const data = {
         success: true,
-        msg: `Bus with id ${id} has been deleted!`
+        msg: `Route with id ${id} has been deleted!`
       }
       res.send(data)
     } else {

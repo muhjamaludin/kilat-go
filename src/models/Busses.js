@@ -69,10 +69,11 @@ module.exports = {
       })
     })
   },
-  updateBus: function (id, picture, busName, busSeat, classBus, idRoute) {
+  updateBus: function (id, idAgent, idBusRoute, idBusSchedule, picture, busName, classBus, busSeat) {
     const table = 'buses'
     picture = (typeof picture === 'string' ? `'${picture}'` : picture)
-    const sql = `UPDATE ${table} SET picture=${picture}, bus_name='${busName}', bus_seat='${busSeat}', classBus='${classBus}', id_bus_route=${idRoute} WHERE id=${id}`
+    const sql = `UPDATE ${table} SET id_agents=${idAgent}, id_bus_route=${idBusRoute}, id_bus_schedule=${idBusSchedule}, 
+    picture=${picture}, bus_name='${busName}', class_bus='${classBus}', bus_seat='${busSeat}' WHERE id=${id}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
         console.log(sql)

@@ -55,8 +55,8 @@ module.exports = {
   update: async function (req, res) {
     const picture = (req.file && req.file.filename) || null
     const { id } = req.params
-    const { busName, busSeat, classBus, idRoute } = req.body
-    const results = await BusModel.updateBus(id, picture, busName, busSeat, classBus, idRoute)
+    const { idAgent, idBusRoute, idBusSchedule, busName, classBus, busSeat } = req.body
+    const results = await BusModel.updateBus(id, idAgent, idBusRoute, idBusSchedule, picture, busName, classBus, busSeat)
     delete req.body.password
     if (results) {
       const data = {

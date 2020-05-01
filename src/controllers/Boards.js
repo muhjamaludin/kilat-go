@@ -15,8 +15,8 @@ module.exports = {
     sort = (sort && { key, value }) || { key: 'id', value: 1 }
     const conditions = { page, perPage: limit, search, sort }
 
-    const results = await BoardsModel.getAllReservations(conditions)
-    conditions.totalData = await BoardsModel.getTotalReservation(conditions)
+    const results = await BoardsModel.getAllBoards(conditions)
+    conditions.totalData = await BoardsModel.getTotalBoard(conditions)
     conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
     conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`agents?page=${page + 1}`))
     conditions.prevLink = (page <= 1 ? null : process.env.APP_URI.concat(`agents?page=${page - 1}`))
@@ -86,7 +86,7 @@ module.exports = {
   },
   delete: async function (req, res) {
     const { id } = req.params
-    const results = await BoardsModel.deleteReservation(id)
+    const results = await BoardsModel.deleteBoard(id)
     if (results) {
       const data = {
         success: true,

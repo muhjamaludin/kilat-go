@@ -9,20 +9,27 @@ const check = function (err, results, fields) {
 }
 
 db.query(`
+  CREATE TABLE IF NOT EXISTS boards(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_price INT,
+    schedule DATE,
+    Seat VARCHAR(4),
+    FOREIGN KEY (id_price) REFERENCES prices(id) ON DELETE CASCADE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+  )
+`, check)
+
+db.query(`
   CREATE TABLE IF NOT EXISTS reservations(
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_user INT,
-    id_bus INT,
-    id_route INT,
-    id_schedule INT,
     id_price INT,
-    seat INT(1) NOT NULL,
-    date DATETIME,
-    FOREIGN KEY (id_user) REFERENCES user_details (id),
-    FOREIGN KEY (id_bus) REFERENCES buses (id),
-    FOREIGN KEY (id_route) REFERENCES routes (id),
-    FOREIGN KEY (id_schedule) REFERENCES schedules (id),
-    FOREIGN KEY (id_price) REFERENCES transactions (id),
+    id_board INT,
+    status VARCHAR(10),
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_price) REFERENCES prices(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_board) REFERENCES boards(id) ON DELETE CASCADE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
   )

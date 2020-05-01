@@ -17,7 +17,6 @@ db.query(`
     picture TEXT,
     bus_name VARCHAR(30) NOT NULL,
     class_bus VARCHAR(15) NOT NULL,
-    bus_seat INT(2) NOT NULL,
     CONSTRAINT idAgent FOREIGN KEY (id_agents) REFERENCES agents(id) ON DELETE CASCADE,
     CONSTRAINT routeBus FOREIGN KEY (id_bus_route) REFERENCES routes(id) ON DELETE CASCADE,
     CONSTRAINT scheduleBus FOREIGN KEY (id_bus_schedule) REFERENCES schedules(id) ON DELETE CASCADE,

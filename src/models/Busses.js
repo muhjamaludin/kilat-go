@@ -53,11 +53,11 @@ module.exports = {
       })
     })
   },
-  createBus: function (idAgent, idBusRoute, idBusSchedule, picture, busName, classBus, busSeat) {
+  createBus: function (idAgent, idBusRoute, idBusSchedule, picture, busName, classBus) {
     const table = 'buses'
     picture = (typeof picture === 'string' ? `'${picture}'` : picture)
     const sql = `INSERT INTO ${table} (id_agents, id_bus_route, id_bus_schedule, picture, bus_name, class_bus, bus_seat) VALUES 
-    (${idAgent}, ${idBusRoute}, ${idBusSchedule}, ${picture}, '${busName}', '${classBus}', ${busSeat})`
+    (${idAgent}, ${idBusRoute}, ${idBusSchedule}, ${picture}, '${busName}', '${classBus}')`
     return new Promise(function (resolve, reject) {
       console.log(sql)
       db.query(sql, function (err, results, fields) {
@@ -69,11 +69,11 @@ module.exports = {
       })
     })
   },
-  updateBus: function (id, idAgent, idBusRoute, idBusSchedule, picture, busName, classBus, busSeat) {
+  updateBus: function (id, idAgent, idBusRoute, idBusSchedule, picture, busName, classBus) {
     const table = 'buses'
     picture = (typeof picture === 'string' ? `'${picture}'` : picture)
     const sql = `UPDATE ${table} SET id_agents=${idAgent}, id_bus_route=${idBusRoute}, id_bus_schedule=${idBusSchedule}, 
-    picture=${picture}, bus_name='${busName}', class_bus='${classBus}', bus_seat='${busSeat}' WHERE id=${id}`
+    picture=${picture}, bus_name='${busName}', class_bus='${classBus}' WHERE id=${id}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
         console.log(sql)

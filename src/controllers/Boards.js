@@ -14,9 +14,33 @@ module.exports = {
     value = sort && Object.values(sort)[0]
     sort = (sort && { key, value }) || { key: 'id', value: 1 }
     const conditions = { page, perPage: limit, search, sort }
-
+    let table = 'boards'
+    switch (search.key) {
+      case 'name':
+        table = 'agents'
+        break;
+      case 'bus_name':
+      case 'class_bus':
+        table = 'buses'
+        break;
+      case 'departure':
+      case 'destination':
+        table = 'routes'
+        break;
+      case 'departure_time':
+      case 'arrive_time':
+        table = 'schedules'
+        break;
+      case 'price':
+        table = 'prices'
+        break;
+      default:
+        table = 'boards'
+        break;
+    }
+    console.log('isi value', search)
     const results = await BoardsModel.getAllBoards(conditions)
-    conditions.totalData = await BoardsModel.getTotalBoard(conditions)
+    conditions.totalData = await BoardsModel.getTotalBoard(conditions, table)
     conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
     conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`agents?page=${page + 1}`))
     conditions.prevLink = (page <= 1 ? null : process.env.APP_URI.concat(`agents?page=${page - 1}`))

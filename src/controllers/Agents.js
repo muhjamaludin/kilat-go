@@ -1,4 +1,5 @@
 const AgentsModel = require('../models/Agents')
+const UserModel = require('../models/Users')
 
 module.exports = {
   read: async function (req, res) {
@@ -9,14 +10,23 @@ module.exports = {
     let key = search && Object.keys(search)[0]
     let value = search && Object.values(search)[0]
     search = (search && { key, value }) || { key: 'name', value: '' }
+    let table = 'users'
+    switch (search.key) {
+      case 'name':
+        table = 'agents'
+        break;
+      default:
+        table = 'users'
+        break;
+    }
 
     key = sort && Object.keys(sort)[0]
     value = sort && Object.values(sort)[0]
-    sort = (sort && { key, value }) || { key: 'id', value: 1 }
+    sort = (sort && { key, value }) || { key: 'agents.id', value: 1 }
     const conditions = { page, perPage: limit, search, sort }
 
     const results = await AgentsModel.getAllAgents(conditions)
-    conditions.totalData = await AgentsModel.getTotalAgents(conditions)
+    conditions.totalData = await AgentsModel.getTotalAgents(conditions, table)
     conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
     conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`agents?page=${page + 1}`))
     conditions.prevLink = (page <= 1 ? null : process.env.APP_URI.concat(`agents?page=${page - 1}`))
@@ -46,8 +56,11 @@ module.exports = {
       }
       res.send(data)
     } else {
-      const { idUser, name } = req.body
+      const { username, name } = req.body
+      const userId = await AgentsModel.getIdUserByUsername(username)
+      const idUser = userId[0].id
       const results = await AgentsModel.createAgents(idUser, name)
+      await UserModel.EditRole(idUser, 2)
       const data = {
         success: true,
         msg: `Agent ${name} has been created`,
@@ -65,7 +78,7 @@ module.exports = {
       res.send(data)
     } else {
       const { id } = req.params
-      const { name } = req.body
+      const { username, name } = req.body
       const results = await AgentsModel.updateAgentById(id, name)
       if (results) {
         const data = {

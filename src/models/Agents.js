@@ -5,12 +5,12 @@ module.exports = {
     let { page, perPage, sort, search } = conditions
     page = page || 1
     perPage = perPage || 5
-    sort = sort || { key: 'id', value: '' }
+    sort = sort || { key: 'agents.id', value: '' }
     search = search || { key: 'name', value: '' }
     const table = 'agents'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM ${table} WHERE name LIKE '${search.value}%'
-      ORDER BY ${sort.key} ${sort.value ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
+      const sql = `SELECT agents.id AS id, users.username AS username, agents.name AS name FROM ${table} JOIN users ON agents.id_user=users.id 
+      WHERE ${search.key} LIKE '${search.value}%' ORDER BY ${sort.key} ${sort.value ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {
@@ -24,7 +24,7 @@ module.exports = {
   getAgentById: function (id) {
     const table = 'agents'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM ${table} WHERE id=${id}`
+      const sql = `SELECT agents.id AS id, users.username AS username, agents.name AS name FROM ${table} JOIN users ON agents.id_user=users.id WHERE agents.id=${id}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {
@@ -35,10 +35,9 @@ module.exports = {
       })
     })
   },
-  getTotalAgents: function (conditions = {}) {
+  getTotalAgents: function (conditions = {}, table) {
     let { search } = conditions
     search = search || { key: 'name', value: '' }
-    const table = 'agents'
     return new Promise(function (resolve, reject) {
       const sql = `
       SELECT COUNT (*) AS total FROM ${table}
@@ -49,6 +48,20 @@ module.exports = {
           reject(err)
         } else {
           resolve(results[0].total)
+        }
+      })
+    })
+  },
+  getIdUserByUsername: function (username) {
+    const table = 'users'
+    return new Promise(function (resolve, reject) {
+      const sql = `SELECT id FROM ${table} WHERE username='${username}'`
+      db.query(sql, function (err, results, fields) {
+        console.log('sql username', sql)
+        if (err) {
+          reject(err)
+        } else {
+          resolve(results)
         }
       })
     })

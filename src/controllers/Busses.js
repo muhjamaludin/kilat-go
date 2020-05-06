@@ -43,11 +43,12 @@ module.exports = {
   },
   create: async function (req, res) {
     const picture = (req.file && req.file.filename) || null
-    const { idAgent, idBusRoute, idBusSchedule, busName, classBus, busSeat } = req.body
-    const results = await BusModel.createBus(idAgent, idBusRoute, idBusSchedule, picture, busName, classBus, busSeat)
+    const { idAgent, idBusRoute, idBusSchedule, busName, classBus } = req.body
+    console.log('id bus', req.body)
+    const results = await BusModel.createBus(idAgent, idBusRoute, idBusSchedule, picture, busName, classBus)
     const data = {
       success: true,
-      msg: `Bus ${busName} with ${busSeat} and class ${classBus} seat has been created`,
+      msg: `Bus ${busName} with class ${classBus} seat has been created`,
       data: { id: results, ...req.body }
     }
     res.send(data)

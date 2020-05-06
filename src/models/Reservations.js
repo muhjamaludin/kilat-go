@@ -9,9 +9,10 @@ module.exports = {
     search = search || { key: 'bus_name', value: '' }
     const table = 'reservations'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT users.username, buses.bus_name, buses.classBus, routes.departure, routes.destination, schedules.departure_time, schedules.arrive_time, seat from 
-      ${table} join users on reservations.id_user=users.id join buses on reservations.id_bus=buses.id join routes on reservations.id_route=routes.id 
-      join schedules on reservations.id_schedule=schedules.id `
+      const sql = `SELECT users.username AS username, user_details.fullname AS fullname, buses.bus_name AS busName, buses.class_bus AS classBus, 
+      reservations.seat AS seat, routes.departure AS departure, routes.destination AS destination, prices.price AS price, reservations.status AS statusBoard 
+      FROM ${table} JOIN users ON reservations.id_user=users.id JOIN prices ON prices.id=reservations.id_price JOIN user_details ON users.id=user_details.id_user 
+      JOIN buses ON buses.id=prices.id_bus JOIN boards ON boards.id=reservations.id_board JOIN routes ON routes.id=buses.id_bus_route`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {
@@ -54,17 +55,33 @@ module.exports = {
       })
     })
   },
-  createReservation: function (idUser, idBus, idRoute, idSchedule, idPrice, seat, date) {
+  createReservation: function (idUser, idPrice, idBoard, seat, status) {
     const table = 'reservations'
-    // roleId = roleId || 3
-    const sql = `INSERT INTO ${table} (id_user, id_bus, id_route, id_schedule, id_price, seat, date) VALUES (
-      ${idUser}, ${idBus}, ${idRoute}, ${idSchedule}, ${idPrice}, '${seat}', ${date})`
+    const sql = `INSERT INTO ${table} (id_user, id_price, id_board, seat, status) VALUES (
+      ${idUser}, ${idPrice}, ${idBoard}, ${seat}, '${status}')`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
         if (err) {
           reject(err)
         } else {
           resolve(results.insertId)
+        }
+      })
+    })
+  },
+  updateSeatBoard: function (idBoard, seat) {
+    const table = 'boards'
+    const sql = `UPDATE ${table} SET seat= seat - 1 WHERE id=${idBoard}`
+    return new Promise(function (resolve, reject) {
+      db.query(sql, function (err, results, fields) {
+        if (err) {
+          reject(err)
+        } else {
+          if (results.affectedRows) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
         }
       })
     })

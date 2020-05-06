@@ -9,7 +9,9 @@ module.exports = {
     search = search || { key: 'bus_name', value: '' }
     const table = 'buses'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM ${table} WHERE ${search.key} LIKE '${search.value}%'
+      const sql = `SELECT buses.id, agents.name, buses.picture, buses.bus_name, buses.class_bus, routes.departure, routes.destination, schedules.departure_time, schedules.arrive_time 
+      FROM ${table} JOIN agents ON buses.id_agents=agents.id JOIN routes ON buses.id_bus_route=routes.id JOIN schedules ON schedules.id=buses.id_bus_schedule 
+      WHERE ${search.key} LIKE '${search.value}%'
       ORDER BY bus_name ${sort.value ? 'ASC' : 'DESC'}  LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
@@ -56,10 +58,10 @@ module.exports = {
   createBus: function (idAgent, idBusRoute, idBusSchedule, picture, busName, classBus) {
     const table = 'buses'
     picture = (typeof picture === 'string' ? `'${picture}'` : picture)
-    const sql = `INSERT INTO ${table} (id_agents, id_bus_route, id_bus_schedule, picture, bus_name, class_bus, bus_seat) VALUES 
+    const sql = `INSERT INTO ${table} (id_agents, id_bus_route, id_bus_schedule, picture, bus_name, class_bus) VALUES 
     (${idAgent}, ${idBusRoute}, ${idBusSchedule}, ${picture}, '${busName}', '${classBus}')`
     return new Promise(function (resolve, reject) {
-      console.log(sql)
+      console.log('sql', sql)
       db.query(sql, function (err, results, fields) {
         if (err) {
           reject(err)

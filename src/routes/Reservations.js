@@ -9,9 +9,9 @@ Reservation.post('/board/', AuthMiddleware.checkAuthToken, BoardsControllers.cre
 Reservation.patch('/board/:id', AuthMiddleware.checkAuthToken, BoardsControllers.update)
 Reservation.delete('/board/:id', AuthMiddleware.checkAuthToken, BoardsControllers.delete)
 
-Reservation.get('/', ReservationsControllers.read)
-Reservation.get('/:id', ReservationsControllers.getReservation)
-Reservation.post('/', AuthMiddleware.checkAuthToken, ReservationsControllers.create)
+Reservation.get('/', AuthMiddleware.checkAuthToken, ReservationsControllers.read)
+Reservation.get('/:id',  AuthMiddleware.checkAuthToken,  ReservationsControllers.getReservation)
+Reservation.post('/add',  AuthMiddleware.checkAuthToken, ReservationsControllers.create)
 Reservation.patch('/:id', AuthMiddleware.checkAuthToken, ReservationsControllers.update)
 Reservation.delete('/:id', AuthMiddleware.checkAuthToken, ReservationsControllers.delete)
 

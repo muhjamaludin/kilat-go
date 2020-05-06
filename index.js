@@ -10,6 +10,7 @@ app.use(bodyParser.json())
 app.use(cors())
 
 const AuthMiddleware = require('./src/middleware/Auth')
+app.use(express.static('files'))
 
 app.get('/migrate', function (req, res) {
   require('./src/migrations/Users')

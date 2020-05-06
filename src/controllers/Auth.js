@@ -25,7 +25,7 @@ module.exports = {
           if (await AuthModel.checkActivatedUser(info.id)) {
             const payload = { username, roleId: info.role_id, userId: info.id }
             const roleId = payload.roleId
-            const options = { expiresIn: '30m' }
+            const options = { expiresIn: '30h' }
             const key = process.env.APP_KEY
             const token = jwt.sign(payload, key, options)
             const data = {

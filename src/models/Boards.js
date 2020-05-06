@@ -9,9 +9,11 @@ module.exports = {
     search = search || { key: 'bus_name', value: '' }
     const table = 'boards'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT users.username, buses.bus_name, buses.classBus, routes.departure, routes.destination, schedules.departure_time, schedules.arrive_time, seat from 
-      ${table} join users on reservations.id_user=users.id join buses on reservations.id_bus=buses.id join routes on reservations.id_route=routes.id 
-      join schedules on reservations.id_schedule=schedules.id `
+      const sql = `SELECT boards.id AS id, agents.name AS agent, buses.bus_name AS busName, buses.class_bus AS classBus, routes.departure AS departure, routes.destination AS destination, 
+      schedules.departure_time AS timeGo, schedules.arrive_time AS arrive, prices.price AS price, boards.seat AS seat, boards.schedule AS schedule 
+      FROM buses JOIN agents ON buses.id_agents=agents.id JOIN routes ON buses.id_bus_route=routes.id JOIN schedules ON buses.id_bus_schedule=schedules.id 
+      JOIN prices ON prices.id_bus=buses.id JOIN boards ON prices.id=boards.id_price 
+      WHERE ${search.key} LIKE '%${search.value}%' ORDER BY ${sort.key} ${parseInt(sort.value) ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {
@@ -36,10 +38,10 @@ module.exports = {
       })
     })
   },
-  getTotalBoard: function (conditions = {}) {
+  getTotalBoard: function (conditions = {}, table) {
     let { search } = conditions
     search = search || { key: 'bus_name', value: '' }
-    const table = 'boards'
+    // const table = 'boards'
     return new Promise(function (resolve, reject) {
       const sql = `
       SELECT COUNT (*) AS total FROM ${table}

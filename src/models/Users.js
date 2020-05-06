@@ -27,7 +27,7 @@ module.exports = {
     const table = 'users'
     return new Promise(function (resolve, reject) {
       const sql = `SELECT users.id, users.role_id, user_details.profile_picture, users.username, user_details.fullname, user_details.identity, user_details.gender, 
-      user_details.phone, user_details.address, user_details.balance 
+      user_details.phone, user_details.email, user_details.address, user_details.balance 
       FROM ${table} JOIN user_details ON users.id=user_details.id_user WHERE users.id=${id}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)

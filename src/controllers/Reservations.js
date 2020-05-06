@@ -8,7 +8,7 @@ module.exports = {
 
     let key = search && Object.keys(search)[0]
     let value = search && Object.values(search)[0]
-    search = (search && { key, value }) || { key: 'seat', value: '' }
+    search = (search && { key, value }) || { key: 'status', value: '' }
 
     key = sort && Object.keys(sort)[0]
     value = sort && Object.values(sort)[0]
@@ -55,17 +55,10 @@ module.exports = {
     }
   },
   create: async function (req, res) {
-    // if (req.user.roleId !== 1) {
-    //   const data = {
-    //     success: false,
-    //     msg: 'You\'re not allowed to access this feature'
-    //   }
-    //   res.send(data)
-    // }
-    const { idUser, idBus, idRoute, idSchedule, idPrice, seat, date } = req.body
-    // insert data into database with model
-    const results = await ReservationModel.createReservation(idUser, idBus, idRoute, idSchedule, idPrice, seat, date)
-
+    const { idUser, idPrice, idBoard, seat, status } = req.body
+    const results = await ReservationModel.createReservation(idUser, idPrice, idBoard, seat, status)
+    const board = await ReservationModel.updateSeatBoard(idBoard, seat)
+    console.log('alam lain', board)
     const data = {
       success: true,
       msg: `Reservation from id ${idUser} has been created`,

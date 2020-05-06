@@ -26,6 +26,7 @@ db.query(`
     id_user INT,
     id_price INT,
     id_board INT,
+    seat VARCHAR(4),
     status VARCHAR(10),
     FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (id_price) REFERENCES prices(id) ON DELETE CASCADE,

@@ -9,7 +9,7 @@ module.exports = {
     search = search || { key: 'price', value: '' }
     const table = 'prices'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT buses.bus_name, buses.class_bus, routes.departure, routes.destination, schedules.departure_time, schedules.arrive_time, prices.price
+      const sql = `SELECT prices.id, buses.bus_name, buses.class_bus, routes.departure, routes.destination, schedules.departure_time, schedules.arrive_time, prices.price
       FROM buses JOIN routes ON routes.id=buses.id_bus_route JOIN schedules ON schedules.id=buses.id_bus_schedule JOIN ${table} ON buses.id=${table}.id_bus 
       WHERE ${search.key} LIKE '${search.value}%' ORDER BY price ${sort.value ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {

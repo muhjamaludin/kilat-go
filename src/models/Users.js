@@ -252,15 +252,27 @@ module.exports = {
   },
   topup: function (id, balance) {
     const table = 'user_details'
-    const sql = `UPDATE ${table} SET balance=${balance} WHERE id_user=${id}`
+    const sql = `SELECT balance FROM ${table} WHERE id=${id}`
     return new Promise(function (resolve, reject) {
       db.query(sql, function (err, results, fields) {
-        console.log(sql)
         if (err) {
           reject(err)
         } else {
-          if (results.affectedRows) {
-            resolve(true)
+          if (results) {
+            const money = results[0].balance
+            const sql = `UPDATE ${table} SET balance= ${money} + ${balance} WHERE id_user=${id}`
+            db.query(sql, function (err, results, fields) {
+              console.log(sql)
+              if (err) {
+                reject(err)
+              } else {
+                if (results.affectedRows) {
+                  resolve(true)
+                } else {
+                  resolve(false)
+                }
+              }
+            })
           } else {
             resolve(false)
           }

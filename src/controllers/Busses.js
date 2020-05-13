@@ -14,12 +14,26 @@ module.exports = {
     value = sort && Object.values(sort)[0]
     sort = (sort && { key, value }) || { key: 'id', value: 1 }
     const conditions = { page, perPage: limit, search, sort }
+    console.log('search', search.key)
+    let table = 'buses'
+    switch (search.key || sort.key) {
+      case 'departure':
+      case 'destination':
+        table = 'routes'
+        break;
+      case 'name':
+        table = 'agents'
+        break;
+      default:
+        table = 'buses'
+        break;
+    }
 
     const results = await BusModel.getAllBus(conditions)
     // results.forEach(function (o, i) {
     //   results[i].picture = process.env.APP_BUS_PICTURE_URI.concat(results[i].picture)
     // })
-    conditions.totalData = await BusModel.getTotalBus(conditions)
+    conditions.totalData = await BusModel.getTotalBus(conditions, table)
     conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
     conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`bus?page=${page + 1}`))
     conditions.prevLink = (page <= 1 ? null : process.env.APP_URI.concat(`bus?page=${page - 1}`))

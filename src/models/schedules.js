@@ -9,8 +9,8 @@ module.exports = {
     search = search || { key: 'departure_time', value: '' }
     const table = 'schedules'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM ${table} WHERE departure_time LIKE '${search.value}%'
-      ORDER BY ${sort.key} ${sort.value ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
+      const sql = `SELECT * FROM ${table} WHERE ${search.key} LIKE '${search.value}%'
+      ORDER BY ${sort.key} ${parseInt(sort.value) ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {
@@ -42,7 +42,7 @@ module.exports = {
     return new Promise(function (resolve, reject) {
       const sql = `
       SELECT COUNT (*) AS total FROM ${table}
-      WHERE departure_time LIKE '${search.value}%'`
+      WHERE ${search.key} LIKE '${search.value}%'`
       console.log(sql)
       db.query(sql, function (err, results, fields) {
         if (err) {

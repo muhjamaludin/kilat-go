@@ -40,9 +40,8 @@ module.exports = {
   },
   create: async function (req, res) {
     const { departure, destination } = req.body
-    // insert data into database with model
     const results = await RouteModel.createRoute(departure, destination)
-
+    console.log('dadada')
     const data = {
       success: true,
       msg: `Route from ${departure} to ${destination} has been created`,

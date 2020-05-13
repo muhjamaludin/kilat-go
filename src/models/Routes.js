@@ -9,8 +9,8 @@ module.exports = {
     search = search || { key: 'departure', value: '' }
     const table = 'routes'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM ${table} WHERE departure LIKE '${search.value}%'
-      ORDER BY ${sort.key} ${sort.value ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
+      const sql = `SELECT * FROM ${table} WHERE ${search.key} LIKE '${search.value}%'
+      ORDER BY ${sort.key} ${parseInt(sort.value) ? 'ASC' : 'DESC'} LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {

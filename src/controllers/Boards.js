@@ -38,7 +38,7 @@ module.exports = {
         table = 'boards'
         break;
     }
-    console.log('isi value', search)
+    console.log('isi value', sort)
     const results = await BoardsModel.getAllBoards(conditions)
     conditions.totalData = await BoardsModel.getTotalBoard(conditions, table)
     conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
@@ -58,7 +58,7 @@ module.exports = {
   getReservation: async function (req, res) {
     const data = {
       success: true,
-      data: await BoardsModel.getReservationById(req.params.id)
+      data: await BoardsModel.getBoardById(req.params.id)
     }
     res.send(data)
   },

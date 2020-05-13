@@ -12,7 +12,7 @@ module.exports = {
       const sql = `SELECT buses.id, agents.name, buses.picture, buses.bus_name, buses.class_bus, routes.departure, routes.destination, schedules.departure_time, schedules.arrive_time 
       FROM ${table} JOIN agents ON buses.id_agents=agents.id JOIN routes ON buses.id_bus_route=routes.id JOIN schedules ON schedules.id=buses.id_bus_schedule 
       WHERE ${search.key} LIKE '${search.value}%'
-      ORDER BY bus_name ${sort.value ? 'ASC' : 'DESC'}  LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
+      ORDER BY ${sort.key} ${parseInt(sort.value) ? 'DESC' : 'ASC'}  LIMIT ${perPage} OFFSET ${(page - 1) * perPage}`
       db.query(sql, function (err, results, fields) {
         console.log(sql)
         if (err) {
@@ -37,10 +37,9 @@ module.exports = {
       })
     })
   },
-  getTotalBus: function (conditions = {}) {
+  getTotalBus: function (conditions = {}, table) {
     let { search } = conditions
     search = search || { key: 'bus_name', value: '' }
-    const table = 'buses'
     return new Promise(function (resolve, reject) {
       const sql = `
       SELECT COUNT (*) AS total FROM ${table}

@@ -28,10 +28,12 @@ module.exports = {
             const options = { expiresIn: '30h' }
             const key = process.env.APP_KEY
             const token = jwt.sign(payload, key, options)
+            const userId = info.id
             const data = {
               success: true,
               token,
-              roleId
+              roleId,
+              userId
             }
             res.send(data)
           } else {

@@ -24,11 +24,21 @@ module.exports = {
       sort = (sort && { key, value }) || { key: 'id', value: 1 }
       const conditions = { page, perPage: limit, search, sort }
 
+    let table = 'user_details'
+    switch (search.key || sort.key) {
+      case 'username':
+        table = 'users'
+        break;
+      default:
+        table = 'user_details'
+        break;
+    }
+
       const results = await UserModel.getAllUsers(conditions)
       // results.forEach(function (o, i) {
       //   results[i].picture = process.env.APP_USER_PICTURE_URI.concat(results[i].picture)
       // })
-      conditions.totalData = await UserModel.getTotalUsers(conditions)
+      conditions.totalData = await UserModel.getTotalUsers(conditions, table)
       conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
       conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`users?page=${page + 1}`))
       conditions.prevLink = (page <= 1 ? null : process.env.APP_URI.concat(`users?page=${page - 1}`))
@@ -180,9 +190,9 @@ module.exports = {
       }
       res.send(data)
     } else {
-      const { id, RoleId } = req.body
-      console.log(id, RoleId)
-      const result = await UserModel.EditRole(id, RoleId)
+      const { idUser, RoleId } = req.body
+      console.log(idUser, RoleId, req.body)
+      const result = await UserModel.EditRole(idUser, RoleId)
       if (result) {
         const data = {
           succes: true,

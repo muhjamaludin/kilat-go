@@ -47,7 +47,7 @@ db.query(`
     id_user INT NOT NULL,
     profile_picture TEXT,
     identity VARCHAR(16) NOT NULL,
-    fullname VARCHAR(15) NOT NULL,
+    fullname VARCHAR(30) NOT NULL,
     gender VARCHAR(10) NOT NULL,
     email VARCHAR(20) NOT NULL,
     phone VARCHAR(16) NOT NULL,

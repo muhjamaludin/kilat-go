@@ -10,21 +10,21 @@ module.exports = {
     let key = search && Object.keys(search)[0]
     let value = search && Object.values(search)[0]
     search = (search && { key, value }) || { key: 'name', value: '' }
-    let table = 'users'
-    switch (search.key) {
-      case 'name':
-        table = 'agents'
-        break;
-      default:
-        table = 'users'
-        break;
-    }
-
+    
     key = sort && Object.keys(sort)[0]
     value = sort && Object.values(sort)[0]
-    sort = (sort && { key, value }) || { key: 'agents.id', value: 1 }
+    sort = (sort && { key, value }) || { key: 'id', value: 1 }
     const conditions = { page, perPage: limit, search, sort }
-
+    let table = 'agents'
+    switch (search.key) {
+      case 'username':
+        table = 'users'
+        break;
+      default:
+        table = 'agents'
+        break;
+    }
+    console.log('sort', sort.key)
     const results = await AgentsModel.getAllAgents(conditions)
     conditions.totalData = await AgentsModel.getTotalAgents(conditions, table)
     conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
@@ -45,6 +45,13 @@ module.exports = {
     const data = {
       success: true,
       data: await AgentsModel.getAgentById(req.params.id)
+    }
+    res.send(data)
+  },
+  getUser: async function (req, res) {
+    const data = {
+      success: true,
+      data: await AgentsModel.getUserFromUsers()
     }
     res.send(data)
   },

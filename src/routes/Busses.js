@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 100 },
+  limits: { fileSize: 1000000 },
   fileFilter: function (req, file, cb) {
     if (file.mimetype === '.jpg') {
       return cb(new Error('Wrong file type'))
@@ -18,11 +18,14 @@ const upload = multer({
   }
 })
 
+const AuthMiddleware = require('../middleware/Auth')
+
 const busses = () => {
   Busses.get('/', BusControllers.read)
-  Busses.post('/', upload.single('picture'), BusControllers.create)
-  Busses.patch('/:id', upload.single('picture'), BusControllers.update)
-  Busses.delete('/:id', BusControllers.delete)
+  Busses.get('/:id', BusControllers.getBus)
+  Busses.post('/add', AuthMiddleware.checkAuthToken, upload.single('picture'), BusControllers.create)
+  Busses.patch('/:id', AuthMiddleware.checkAuthToken, upload.single('picture'), BusControllers.update)
+  Busses.delete('/:id', AuthMiddleware.checkAuthToken, BusControllers.delete)
 }
 
 busses()

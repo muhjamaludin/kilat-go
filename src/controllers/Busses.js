@@ -2,48 +2,67 @@ const BusModel = require('../models/Busses')
 
 module.exports = {
   read: async function (req, res) {
-    // if (req.user.roleId !== 1) {
-    //   const data = {
-    //     success: false,
-    //     msg: 'You\'re not allowed to access this feature'
-    //   }
-    //   res.send(data)
-    // }
-    let { search, sort } = req.query
-    console.log(search)
+    let { page, limit, search, sort } = req.query
+    page = parseInt(page) || 1
+    limit = parseInt(limit) || 5
+
     let key = search && Object.keys(search)[0]
     let value = search && Object.values(search)[0]
-    search = (search && { key, value }) || { key: 'id', value: '' }
+    search = (search && { key, value }) || { key: 'bus_name', value: '' }
 
     key = sort && Object.keys(sort)[0]
     value = sort && Object.values(sort)[0]
     sort = (sort && { key, value }) || { key: 'id', value: 1 }
-    const conditions = { search, sort }
+    const conditions = { page, perPage: limit, search, sort }
+    console.log('search', search.key)
+    let table = 'buses'
+    switch (search.key || sort.key) {
+      case 'departure':
+      case 'destination':
+        table = 'routes'
+        break;
+      case 'name':
+        table = 'agents'
+        break;
+      default:
+        table = 'buses'
+        break;
+    }
+
     const results = await BusModel.getAllBus(conditions)
-    results.forEach(function (o, i) {
-      results[i].picture = process.env.APP_USER_PICTURE_URI.concat(results[i].picture)
-    })
-    conditions.totalData = await BusModel.getAllBus(conditions)
+    // results.forEach(function (o, i) {
+    //   results[i].picture = process.env.APP_BUS_PICTURE_URI.concat(results[i].picture)
+    // })
+    conditions.totalData = await BusModel.getTotalBus(conditions, table)
+    conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
+    conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`bus?page=${page + 1}`))
+    conditions.prevLink = (page <= 1 ? null : process.env.APP_URI.concat(`bus?page=${page - 1}`))
     delete conditions.search
     delete conditions.sort
+    delete conditions.limit
 
     const data = {
       success: true,
       data: results,
-      pageinfo: conditions
+      pageInfo: conditions
+    }
+    res.send(data)
+  },
+  getBus: async function (req, res) {
+    const data = {
+      success: true,
+      data: await BusModel.getBusById(req.params.id)
     }
     res.send(data)
   },
   create: async function (req, res) {
-    // if user upload a picture
     const picture = (req.file && req.file.filename) || null
-    const { busName, busSeat, classBus, idRoute } = req.body
-
-    const results = await BusModel.createBus(picture, busName, busSeat, classBus, idRoute)
-
+    const { idAgent, idBusRoute, idBusSchedule, busName, classBus } = req.body
+    console.log('id bus', req.body)
+    const results = await BusModel.createBus(idAgent, idBusRoute, idBusSchedule, picture, busName, classBus)
     const data = {
       success: true,
-      msg: `Bus ${busName} with ${busSeat} and class ${classBus} seat has been created`,
+      msg: `Bus ${busName} with class ${classBus} seat has been created`,
       data: { id: results, ...req.body }
     }
     res.send(data)
@@ -51,8 +70,8 @@ module.exports = {
   update: async function (req, res) {
     const picture = (req.file && req.file.filename) || null
     const { id } = req.params
-    const { busName, busSeat, classBus, idRoute } = req.body
-    const results = await BusModel.updateBus(id, picture, busName, busSeat, classBus, idRoute)
+    const { idAgent, idBusRoute, idBusSchedule, busName, classBus, busSeat } = req.body
+    const results = await BusModel.updateBus(id, idAgent, idBusRoute, idBusSchedule, picture, busName, classBus, busSeat)
     delete req.body.password
     if (results) {
       const data = {

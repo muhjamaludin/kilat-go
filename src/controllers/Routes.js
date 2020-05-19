@@ -2,26 +2,46 @@ const RouteModel = require('../models/Routes')
 
 module.exports = {
   read: async function (req, res) {
-    // if (req.user.roleId !== 1) {
-    //   const data = {
-    //     success: false,
-    //     msg: 'You\'re not allowed to access this feature'
-    //   }
-    //   res.send(data)
-    // }
-    const results = await RouteModel.getAllRoute()
+    let { page, limit, search, sort } = req.query
+    page = parseInt(page) || 1
+    limit = parseInt(limit) || 5
+
+    let key = search && Object.keys(search)[0]
+    let value = search && Object.values(search)[0]
+    search = (search && { key, value }) || { key: 'departure', value: '' }
+
+    key = sort && Object.keys(sort)[0]
+    value = sort && Object.values(sort)[0]
+    sort = (sort && { key, value }) || { key: 'id', value: 1 }
+    const conditions = { page, perPage: limit, search, sort }
+
+    const results = await RouteModel.getAllRoute(conditions)
+    conditions.totalData = await RouteModel.getTotalRoute(conditions)
+    conditions.totalPage = Math.ceil(conditions.totalData / conditions.perPage)
+    conditions.nextLink = (page >= conditions.totalPage ? null : process.env.APP_URI.concat(`route?page=${page + 1}`))
+    conditions.prevLink = (page <= 1 ? null : process.env.APP_URI.concat(`route?page=${page - 1}`))
+    delete conditions.search
+    delete conditions.sort
+    delete conditions.limit
 
     const data = {
       success: true,
-      data: results
+      data: results,
+      pageInfo: conditions
+    }
+    res.send(data)
+  },
+  getRoute: async function (req, res) {
+    const data = {
+      success: true,
+      data: await RouteModel.getRouteById(req.params.id)
     }
     res.send(data)
   },
   create: async function (req, res) {
     const { departure, destination } = req.body
-    // insert data into database with model
     const results = await RouteModel.createRoute(departure, destination)
-
+    console.log('dadada')
     const data = {
       success: true,
       msg: `Route from ${departure} to ${destination} has been created`,
@@ -55,7 +75,7 @@ module.exports = {
     if (results) {
       const data = {
         success: true,
-        msg: `Bus with id ${id} has been deleted!`
+        msg: `Route with id ${id} has been deleted!`
       }
       res.send(data)
     } else {

@@ -11,12 +11,15 @@ const check = function (err, results, fields) {
 db.query(`
   CREATE TABLE IF NOT EXISTS buses (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    picture TEXT,
-    bus_name VARCHAR(20) NOT NULL,
-    bus_seat INT(2) NOT NULL,
-    class VARCHAR(9) NOT NULL,
+    id_agents INT NOT NULL,
     id_bus_route INT,
-    CONSTRAINT routeBus FOREIGN KEY (id_bus_route) REFERENCES routes(id),
+    id_bus_schedule INT,
+    picture TEXT,
+    bus_name VARCHAR(30) NOT NULL,
+    class_bus VARCHAR(15) NOT NULL,
+    CONSTRAINT idAgent FOREIGN KEY (id_agents) REFERENCES agents(id) ON DELETE CASCADE,
+    CONSTRAINT routeBus FOREIGN KEY (id_bus_route) REFERENCES routes(id) ON DELETE CASCADE,
+    CONSTRAINT scheduleBus FOREIGN KEY (id_bus_schedule) REFERENCES schedules(id) ON DELETE CASCADE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
   )

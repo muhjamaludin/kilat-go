@@ -44,15 +44,16 @@ db.query(`
 db.query(`
   CREATE TABLE IF NOT EXISTS user_details(
     id INT PRIMARY KEY AUTO_INCREMENT,
+    id_user INT NOT NULL,
     profile_picture TEXT,
-    identity INT(16) NOT NULL,
-    firstname VARCHAR(15) NOT NULL,
-    lastname VARCHAR(15) NOT NULL,
-    gender VARCHAR(5) NOT NULL,
+    identity VARCHAR(16) NOT NULL,
+    fullname VARCHAR(30) NOT NULL,
+    gender VARCHAR(10) NOT NULL,
     email VARCHAR(20) NOT NULL,
-    phone VARCHAR(14) NOT NULL,
+    phone VARCHAR(16) NOT NULL,
     address VARCHAR(60) NOT NULL,
-    balance INT(7) NOT NULL,
+    balance INT(8) NOT NULL,
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE, 
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
   )

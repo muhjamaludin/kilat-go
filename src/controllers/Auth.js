@@ -24,12 +24,16 @@ module.exports = {
         if (await AuthModel.checkVerifiedUser(info.id)) {
           if (await AuthModel.checkActivatedUser(info.id)) {
             const payload = { username, roleId: info.role_id, userId: info.id }
-            const options = { expiresIn: '30m' }
+            const roleId = payload.roleId
+            const options = { expiresIn: '30h' }
             const key = process.env.APP_KEY
             const token = jwt.sign(payload, key, options)
+            const userId = info.id
             const data = {
               success: true,
-              token
+              token,
+              roleId,
+              userId
             }
             res.send(data)
           } else {
@@ -56,7 +60,7 @@ module.exports = {
     }
   },
   register: async function (req, res) {
-    const { username, password } = await req.body
+    const { username, password, email, phone } = await req.body
     const checkUser = await AuthModel.checkUsername(username)
     if (checkUser !== 0) {
       const data = {
@@ -67,19 +71,21 @@ module.exports = {
     } else {
       const encryptedPassword = await bcrypt.hashSync(password)
       const results = await UserModel.createUser(username, encryptedPassword)
-      // const resul = await UserModel.createUserDetail(email, phone)
+      const info = await UserModel.getIdByUsername(username)
+      console.log(info[0].id)
+      await UserModel.createUserDetail(info[0].id, email, phone)
       if (results) {
         if (await AuthModel.createVerificationCode(results, uuid())) {
           const data = {
             success: true,
             msg: 'Register Successfully',
-            datauser: `${results}`
+            id_user: `${results}`
           }
           res.send(data)
         } else {
           const data = {
             success: false,
-            msg: 'Verification code couldn\'t be generated'
+            msg: "Verification code couldn't be generated"
           }
           res.send(data)
         }
@@ -109,8 +115,9 @@ module.exports = {
     }
   },
   forgotPassword: async function (req, res) {
-    const { username } = req.body
+    const { username, password } = req.body
     const { change } = req.query
+    console.log(change)
     if (!change) {
       const user = await AuthModel.checkUsername(username)
       if (user) {
@@ -137,7 +144,6 @@ module.exports = {
         res.send(data)
       }
     } else {
-      const { password } = req.body
       if (password === req.body.confirm_password) {
         const encryptedPassword = bcrypt.hashSync(password)
         if (await AuthModel.forgotPassword(change, encryptedPassword)) {
@@ -156,7 +162,7 @@ module.exports = {
       } else {
         const data = {
           success: false,
-          msg: 'Confirm password doesn\'t match'
+          msg: "Confirm password doesn't match"
         }
         res.send(data)
       }

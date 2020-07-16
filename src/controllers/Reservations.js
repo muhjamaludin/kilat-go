@@ -20,19 +20,19 @@ module.exports = {
       case 'departure':
       case 'destination':
         table = 'routes'
-        break;
+        break
       case 'username':
         table = 'users'
-        break;
+        break
       case 'fullname':
         table = 'user_details'
-        break;
+        break
       case 'bus_name':
         table = 'buses'
-        break;
+        break
       default:
         table = 'reservations'
-        break;
+        break
     }
 
     const results = await ReservationModel.getAllReservations(conditions)
@@ -89,7 +89,7 @@ module.exports = {
     res.send(data)
   },
   getSeat: async function (req, res) {
-    const {id} = req.params
+    const { id } = req.params
     const data = {
       success: true,
       data: await ReservationModel.getReservationSeat(id)
@@ -113,7 +113,7 @@ module.exports = {
     }
   },
   create: async function (req, res) {
-    const {id} = req.params
+    const { id } = req.params
     const { idUser, seat, status } = req.body
     const Price = await ReservationModel.getIdPrice(id)
     const idPrice = Price[0].id_price

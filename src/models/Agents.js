@@ -38,7 +38,7 @@ module.exports = {
   getUserFromUsers: function () {
     const table = 'users'
     return new Promise(function (resolve, reject) {
-      const sql = `SELECT * FROM users`
+      const sql = `SELECT * FROM ${table}`
       db.query(sql, function (err, results, fields) {
         if (err) {
           reject(err)

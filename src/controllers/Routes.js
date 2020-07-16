@@ -40,6 +40,7 @@ module.exports = {
   },
   create: async function (req, res) {
     const { departure, destination } = req.body
+    console.log(req.body)
     const results = await RouteModel.createRoute(departure, destination)
     console.log('dadada')
     const data = {

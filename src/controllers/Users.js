@@ -24,15 +24,15 @@ module.exports = {
       sort = (sort && { key, value }) || { key: 'id', value: 1 }
       const conditions = { page, perPage: limit, search, sort }
 
-    let table = 'user_details'
-    switch (search.key || sort.key) {
-      case 'username':
-        table = 'users'
-        break;
-      default:
-        table = 'user_details'
-        break;
-    }
+      let table = 'user_details'
+      switch (search.key || sort.key) {
+        case 'username':
+          table = 'users'
+          break
+        default:
+          table = 'user_details'
+          break
+      }
 
       const results = await UserModel.getAllUsers(conditions)
       // results.forEach(function (o, i) {
@@ -71,6 +71,7 @@ module.exports = {
   },
   updateUser: async function (req, res) {
     const { idUser } = req.params
+    console.log(req.body)
     console.log('id user', idUser)
     const { identity, fullname, gender, email, phone, address } = req.body
     const results = await UserModel.updateUserDetail(idUser, identity, fullname, gender, email, phone, address)
@@ -190,9 +191,9 @@ module.exports = {
       }
       res.send(data)
     } else {
-      const { idUser, RoleId } = req.body
-      console.log(idUser, RoleId, req.body)
-      const result = await UserModel.EditRole(idUser, RoleId)
+      const { id, RoleId } = req.body
+      console.log(id, RoleId, req.body)
+      const result = await UserModel.EditRole(id, RoleId)
       if (result) {
         const data = {
           succes: true,

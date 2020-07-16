@@ -18,25 +18,25 @@ module.exports = {
     switch (search.key) {
       case 'name':
         table = 'agents'
-        break;
+        break
       case 'bus_name':
       case 'class_bus':
         table = 'buses'
-        break;
+        break
       case 'departure':
       case 'destination':
         table = 'routes'
-        break;
+        break
       case 'departure_time':
       case 'arrive_time':
         table = 'schedules'
-        break;
+        break
       case 'price':
         table = 'prices'
-        break;
+        break
       default:
         table = 'boards'
-        break;
+        break
     }
     console.log('isi value', sort)
     const results = await BoardsModel.getAllBoards(conditions)

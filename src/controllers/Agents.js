@@ -10,7 +10,7 @@ module.exports = {
     let key = search && Object.keys(search)[0]
     let value = search && Object.values(search)[0]
     search = (search && { key, value }) || { key: 'name', value: '' }
-    
+
     key = sort && Object.keys(sort)[0]
     value = sort && Object.values(sort)[0]
     sort = (sort && { key, value }) || { key: 'id', value: 1 }
@@ -19,10 +19,10 @@ module.exports = {
     switch (search.key) {
       case 'username':
         table = 'users'
-        break;
+        break
       default:
         table = 'agents'
-        break;
+        break
     }
     console.log('sort', sort.key)
     const results = await AgentsModel.getAllAgents(conditions)
@@ -85,7 +85,7 @@ module.exports = {
       res.send(data)
     } else {
       const { id } = req.params
-      const { username, name } = req.body
+      const { name } = req.body
       const results = await AgentsModel.updateAgentById(id, name)
       if (results) {
         const data = {

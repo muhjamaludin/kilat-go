@@ -7,6 +7,7 @@ module.exports = {
       let token = authorization.slice(7, authorization.length)
       try {
         token = jwt.verify(token, process.env.APP_KEY)
+        console.log('verify', token)
         if (token) {
           req.user = token
           next()
